@@ -1,20 +1,51 @@
- class Reservation {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+class Reservation {
     public String reservationName;
     public int numOfPeople;
-    public double timeBooked;
-    public double timeScheduled;
+    public String timeBooked;
+    public Date timeBookedDate;
+    public Date timeScheduledDate;
+    public String timeScheduled;
     public int priority; //numbers 1-5 will denote priority
+    public int timeScheduledInt;
+    public int timeBookedInt;
 
-    public Reservation(String pReservationName,int pNumOfPeople, double pTimeBooked,double pTimeScheduled, int pPriority){
+    public Reservation(String pReservationName, int pNumOfPeople, String pTimeBooked, String pTimeScheduled) {
         reservationName=pReservationName;
         numOfPeople=pNumOfPeople;
         timeBooked =pTimeBooked;
         timeScheduled =pTimeScheduled;
-        priority =pPriority;
 
+        DateFormat dateFormat = new SimpleDateFormat("kk:mm");
+        try {
+            timeBookedDate = dateFormat.parse(pTimeBooked);
+            timeScheduledDate=dateFormat.parse(pTimeScheduled);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        //making date scheduled into int to sort the reservations
+        String[] timeScheduledNewString=timeBooked.split(":");
+        int hourScheduled=Integer.parseInt(timeScheduledNewString[0]);
+        int minuteScheduled=Integer.parseInt(timeScheduledNewString[1]);
+        timeScheduledInt = (60 * minuteScheduled) + (3600 * hourScheduled);
+
+        //making date booked into int to set priority based on who scheduled first
+        String[] timeBookedNewString=timeBooked.split(":");
+        int hourBooked=Integer.parseInt(timeScheduledNewString[0]);
+        int minuteBooked=Integer.parseInt(timeScheduledNewString[1]);
+        timeBookedInt = (60 * minuteBooked) + (3600 * hourBooked);
+
+
+        //do an if then for if the time it's scheduled is before the current time then cancel the reservation
+        //calculate priority
     }
 public String toString(){
-        return("Name: "+this.reservationName+"\n Number of people: "+ this.numOfPeople+ "\n Time Booked: "+this.timeBooked+"\n Time Scheduled "+timeScheduled+"\n\n");
+        return("Name: "+reservationName+"\nNumber of people: "+ numOfPeople+ "\nTime Booked: "+timeBooked+"\nTime Scheduled "+timeScheduled+"\nPriority: "+priority+"\n");
 
      }
 
